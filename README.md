@@ -2,7 +2,7 @@
 
 Self explanatory, generates miniJava files.
 
-# Todo
+## Todo
 - include miniJava methods
 - add digits into identifiers
 - maybe clean up the random identifier stuff...choose from dictionary of words, etc. want it to encompass entire possible input though!
