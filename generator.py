@@ -33,7 +33,8 @@ def randIdentifier():
 
 
 def makeProgram():
-    program = "class " + randIdentifier() + " { \n"
+    # // P comment is for my personal testing purposes
+    program = "// P\nclass " + randIdentifier() + " { \n"
     for i in range(0, randint(0, 10)):
         fieldOrMethod = randint(0, 1)
         if(fieldOrMethod):
@@ -146,6 +147,3 @@ def makeMethod():
     method += makeStatement()
     method += "\n}"
     return method
-
-
-print(makeProgram())
