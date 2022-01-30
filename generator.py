@@ -13,15 +13,15 @@ def randIdentifier():
         if i%2 == 0:
             e = randint(0, 20)
             if(case < 1):
-                identifier = identifier + UC_CONS[e:e+1]
+                identifier += UC_CONS[e:e+1]
             else:
-                identifier = identifier + LC_CONS[e:e+1]
+                identifier += LC_CONS[e:e+1]
         else:
             e = randint(0, 4)
             if(case < 1):
-                identifier = identifier + UC_VOW[e:e+1]
+                identifier += UC_VOW[e:e+1]
             else:
-                identifier = identifier + LC_VOW[e:e+1]
+                identifier += LC_VOW[e:e+1]
     return identifier
 
 
@@ -31,11 +31,11 @@ def makeProgram():
         fieldOrMethod = randint(0, 1)
         if(fieldOrMethod):
             # field
-            program = program + makeField()
+            program += makeField()
         else:
             # method
             pass
-    program = program + "}"
+    program += "}"
     return program
 
 
@@ -61,17 +61,17 @@ def makeField():
     if(visibility == 0):
         pass
     elif(visibility == 1):
-        field = field + " public"
+        field += " public"
     elif(visibility == 2):
-        field = field + " private"
+        field += " private"
 
     if(access == 0):
         pass
     else:
-        field = field + " static"
+        field += " static"
 
-    field = field + makeType()
-    field = field + " " + randIdentifier() + ";\n"  
+    field += makeType()
+    field += " " + randIdentifier() + ";\n"  
     return field  
 
 
