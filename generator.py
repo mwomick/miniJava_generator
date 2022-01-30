@@ -117,7 +117,7 @@ def makeExpression():
     elif(e == 4):
         return UNOPS[randint(0,1)] + makeExpression()
     elif(e == 5):
-        return makeExpression() + BINOP(randint(0, 10)) + makeExpression()
+        return makeExpression() + BINOPS[randint(0, 10)] + makeExpression()
 
 def makeMethod():
     method = ""
