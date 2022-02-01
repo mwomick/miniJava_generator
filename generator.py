@@ -63,6 +63,73 @@ def makeMethodDeclaration(indentation: int = 0):
     return method
 
 
+def randVisibility():
+    '''Returns an optional visibility keywords with trailing space'''
+    r = randint(0, 2)
+    return ['public ', 'private ', ''][r]
+
+
+def randAccess():
+    '''Returns an optional 'static' keyword with trailing space'''
+    r = randint(0, 1)
+    return 'static ' if r == 0 else ''
+
+
+def randTypeOrVoid():
+    '''Returns a Type or void keyword'''
+    # 5 choices of Type + void
+    r = randint(0, 5)
+    if r == 0:
+        return 'void'
+    else:
+        return randType()
+
+
+def randType():
+    '''Returns a Type'''
+    # 5 choices
+    # int | boolean | id | int[] | id[] 
+    r = randint(0, 4)
+    if r == 0:
+        return 'int'
+    if r == 1:
+        return 'boolean'
+    if r == 2:
+        return randIdentifier()
+    if r == 3:
+        return 'int[]'
+    if r == 4:
+        return f'{randIdentifier}[]'
+
+
+def randParameterList():
+    '''Returns 0 or more parameters'''
+    numOfParameters = randint(0, 8)
+    if numOfParameters == 0:
+        return ''
+
+    parameters = f'{randType()} {randIdentifier()}'
+    for _ in range(1, numOfParameters+1):
+        parameters += ', '
+        parameters += f'{randType()} {randIdentifier()}'
+    
+    return parameters
+
+
+def randArgumentList():
+    '''Returns 0 or more arguments'''
+    numOfArguments = randint(0, 8)
+    if numOfArguments == 0:
+        return ''
+    
+    args = makeExpression()
+    for _ in range(1, numOfArguments+1):
+        args += ', '
+        args += makeExpression()
+    
+    return args
+
+
 def randReference():
     '''Returns a random reference of format id | this | Reference . id'''
     e = randint(0, 2)
@@ -145,59 +212,3 @@ def randUnop():
     r = randint(0, len(unop) - 1)
     return unop[r]
 
-
-def randVisibility():
-    '''Returns an optional visibility keywords with trailing space'''
-    r = randint(0, 2)
-    return ['public ', 'private ', ''][r]
-
-
-def randAccess():
-    '''Returns an optional 'static' keyword with trailing space'''
-    r = randint(0, 1)
-    return 'static ' if r == 0 else ''
-
-
-def randTypeOrVoid():
-    '''Returns a Type or void keyword'''
-    # 5 choices of Type + void
-    r = randint(0, 5)
-    if r == 0:
-        return 'void'
-    else:
-        return randType()
-
-
-def randType():
-    '''Returns a Type'''
-    # 5 choices
-    # int | boolean | id | int[] | id[] 
-    r = randint(0, 4)
-    if r == 0:
-        return 'int'
-    if r == 1:
-        return 'boolean'
-    if r == 2:
-        return randIdentifier()
-    if r == 3:
-        return 'int[]'
-    if r == 4:
-        return f'{randIdentifier}[]'
-
-
-def randParameterList():
-    '''Returns 0 or more parameters'''
-    numOfParameters = randint(0, 8)
-    if numOfParameters == 0:
-        return ''
-
-    parameters = f'{randType()} {randIdentifier()}'
-    for _ in range(1, numOfParameters):
-        parameters += ', '
-        parameters += f'{randType()} {randIdentifier()}'
-    
-    return parameters
-
-
-def randArgumentList():
-    pass
