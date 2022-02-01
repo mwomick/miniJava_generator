@@ -122,10 +122,10 @@ def randArgumentList():
     if numOfArguments == 0:
         return ''
     
-    args = makeExpression()
+    args = randExpression()
     for _ in range(1, numOfArguments+1):
         args += ', '
-        args += makeExpression()
+        args += randExpression()
     
     return args
 
@@ -141,32 +141,66 @@ def randReference():
         return f'{randReference()}.{randIdentifier()}'
 
 
-def makeStatement():
-    # TODO: support more statements
-    e = randint(0, 2)
+def makeStatement(indentation: int = 0):
+    e = randint(0, 7)
+
+    statement = '  ' * indentation
     if e == 0:
-        return "\n{\n" + makeStatement() + "\n}\n"
+        statement += '{\n'
+        statement += makeStatement(indentation+1)
+        statement += '  ' * indentation + '}\n'
+        return statement
+
     if e == 1:
-        return randType() + " " + randIdentifier() + "="+makeExpression()+";\n"
+        statement += f'{randType()} {randIdentifier()} = {randExpression()};\n'
+        return statement
     if e == 2:
-        return randReference() + "=" + makeExpression() + ";\n"
+        statement += f'{randReference()} = {randExpression()};\n'
+        return statement
+    if e == 3:
+        statement += f'{randReference()} [{randExpression()}] = {randExpression()};\n'
+        return statement
+    if e == 4:
+        statement += f'{randReference()}({randArgumentList()});\n'
+        return statement
+    if e == 5:
+        hasExpresion = randint(0, 1)
+        if hasExpresion == 0:
+            return 'return;\n'
+        statement += f'return {randExpression()};\n'
+        return statement
+    if e == 6:
+        statement += f'if ({randExpression()})\n'
+        statement += makeStatement()
+
+        hasElse = randint(0, 1)
+        if hasElse == 0:
+            return statement
+        
+        statement += '  ' * indentation + 'else\n'
+        statement += makeStatement()
+        return statement
+    if e == 7:
+        statement += f'while ({randExpression()})\n'
+        statement += makeStatement()
+        return statement
 
 
-def makeExpression():
+def randExpression():
     e = randint(0, 5)
 
     if e == 0:
         return randReference()
     elif e == 1:
-        return randReference() + "[" + makeExpression()+"]"
+        return randReference() + "[" + randExpression()+"]"
     elif e == 2:
-        return "(" + makeExpression() + ")"
+        return "(" + randExpression() + ")"
     elif e == 3:
         return randLiteral()
     elif e == 4:
-        return randUnop() + makeExpression()
+        return randUnop() + randExpression()
     elif e == 5:
-        return makeExpression() + randBinop() + makeExpression()
+        return randExpression() + randBinop() + randExpression()
 
 
 def randLiteral():
