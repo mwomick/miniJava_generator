@@ -11,83 +11,87 @@ operators = ['>', '<', '==', '>=', '<=', '!=', '&&', '||', '+', '-', '*', '/', '
 def makeProgram():
     # // P comment is for my personal testing purposes
     program = '// P\n'
-    program += "class " + randIdentifier() + " { \n"
-    for i in range(0, randint(0, 10)):
-        fieldOrMethod = randint(0, 1)
-        if(fieldOrMethod):
-            # field
-            program += makeField()
-        else:
-            # method
-            program += makeMethod()
-    program += "\n}"
+    program += randClassDeclaration()
     return program
 
 
-def makeType():
-    e = randint(0, 4)
-    if e == 0:
-        return " int"
-    elif e == 1:
-        return " boolean"
-    elif e == 2:
-        return " " + randIdentifier()
-    elif e == 3:
-        return " " + randIdentifier() + "[]"
-    elif e == 4:
-        return " int[]"
+def randClassDeclaration():
+    text = f'class {randIdentifier()} {{\n'
+
+    declarationNum = randint(0, 20)
+    for _ in range(declarationNum):
+        fieldOrMethod = randint(0, 1)
+        if fieldOrMethod == 0:
+            text += makeFieldDeclaration(indentation=1)
+        else:
+            text += makeMethodDeclaration(indentation=1)
+        text += '\n'
+    text += '\n}'
 
 
-def makeField():
-    field = ""
-    visibility = randint(0, 2)
-    access = randint(0, 1)
-
-    if visibility == 0 :
-        pass
-    elif visibility == 1:
-        field += " public"
-    elif visibility == 2:
-        field += " private"
-
-    if(access == 0):
-        pass
-    else:
-        field += " static"
-
-    field += makeType()
-    field += " " + randIdentifier() + ";\n"
+def makeFieldDeclaration(indentation: int = 0):
+    field = ''
+    if indentation:
+        field += '  ' * indentation
+    field += f'{randVisibility()}{randAccess()}{randType()} {randIdentifier()};\n'
     return field
 
 
-def makeReference():
-    e = randint(0, 2)
+def makeMethodDeclaration(indentation: int = 0):
+    method = ""
+    if indentation:
+        method += '  ' * indentation
 
-    if(e == 0):
-        return " " + randIdentifier()
-    elif(e == 1):
-        return " this"
+    method += randVisibility()
+    method += randAccess()
+    method += randTypeOrVoid() + ' '
+    method += randIdentifier()
+
+    method += f'({randParameterList()}) '
+
+    # {Statement*}
+    method += '{\n'
+
+    if indentation:
+        method += '  ' * indentation
+
+    statementNum = randint(0, 20)
+    for _ in range(statementNum):
+        method += makeStatement()
+    
+    method += '}\n'
+    return method
+
+
+def randReference():
+    '''Returns a random reference of format id | this | Reference . id'''
+    e = randint(0, 2)
+    if e == 0:
+        return randIdentifier()
+    elif e == 1:
+        return 'this'
     else:
-        return makeReference() + "." + randIdentifier()
+        return f'{randReference()}.{randIdentifier()}'
 
 
 def makeStatement():
+    # TODO: support more statements
     e = randint(0, 2)
     if e == 0:
         return "\n{\n" + makeStatement() + "\n}\n"
     if e == 1:
-        return makeType() + " " + randIdentifier() + "="+makeExpression()+";\n"
+        return randType() + " " + randIdentifier() + "="+makeExpression()+";\n"
     if e == 2:
-        return makeReference() + "=" + makeExpression() + ";\n"
+        return randReference() + "=" + makeExpression() + ";\n"
 
 
 def makeExpression():
     e = randint(0, 5)
 
     if e == 0:
-        return makeReference()
+        return randReference()
     elif e == 1:
-        return makeReference() + "[" + makeExpression()+"]"
+        return randReference() + "[" + makeExpression()+"]"
     elif e == 2:
         return "(" + makeExpression() + ")"
     elif e == 3:
@@ -96,35 +100,6 @@ def makeExpression():
         return randUnop() + makeExpression()
     elif e == 5:
         return makeExpression() + randBinop() + makeExpression()
-
-
-def makeMethod():
-    method = ""
-    visibility = randint(0, 2)
-    access = randint(0, 1)
-    typ = randint(0, 1)
-
-    if(visibility == 0):
-        pass
-    elif(visibility == 1):
-        method += " public"
-    elif(visibility == 2):
-        method += " private"
-
-    if access == 0:
-        pass
-    else:
-        method += " static"
-
-    if typ == 0:
-        method += " void"
-    else:
-        method += " " + makeType()
-
-    method += " " + randIdentifier() + "(){\n"
-    method += makeStatement()
-    method += "\n}"
-    return method
 
 
 def randLiteral():
@@ -176,6 +151,15 @@ def randAccess():
     return 'static ' if r == 0 else ''
 
 
+def randTypeOrVoid():
+    # 5 choices of Type + void
+    r = randint(0, 5)
+    if r == 0:
+        return 'void'
+    else:
+        return randType()
+
+
 def randType():
     # 5 choices
     # int | boolean | id | int[] | id[] 
@@ -193,6 +177,7 @@ def randType():
 
 
 def randParameterList():
+    '''Returns 0 or more parameters'''
     numOfParameters = randint(0, 8)
     if numOfParameters == 0:
         return ''
