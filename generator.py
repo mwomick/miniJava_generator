@@ -1,41 +1,17 @@
 from random import randint
 
-UC_CONS = "QWRTYPSDFGHJKLZXCVBNM"
-LC_CONS = "qwrtypsdfghjklzxcvbnm"
-UC_VOW = "AEIOU"
-LC_VOW = "aeiou"
-DIGIT = "1234567890"
-LITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'true', 'false']
-BINOPS = ['*', '-', '+', '/', '>', '<', '<=', '>=', '==', '&&', '||']
-UNOPS = ['!', '-']
+import randutil
 
-
-def randIdentifier():
-    identifier = ""
-    for i in range(0, randint(1, 10)):
-        case = randint(0, 5)
-        if i > 0:
-            e = randint(0, 9)
-            if(randint(0, 5) == 0):
-                identifier += DIGIT[e:e+1]
-        if i % 2 == 0:
-            e = randint(0, 20)
-            if(case < 1):
-                identifier += UC_CONS[e:e+1]
-            else:
-                identifier += LC_CONS[e:e+1]
-        else:
-            e = randint(0, 4)
-            if(case < 1):
-                identifier += UC_VOW[e:e+1]
-            else:
-                identifier += LC_VOW[e:e+1]
-    return identifier
+literals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'true', 'false']
+binop = ['>', '<', '==', '>=', '<=', '!=', '&&', '||', '+', '-', '*', '/']
+unop = ['-', '!']
+operators = ['>', '<', '==', '>=', '<=', '!=', '&&', '||', '+', '-', '*', '/', '!']
 
 
 def makeProgram():
     # // P comment is for my personal testing purposes
-    program = "// P\nclass " + randIdentifier() + " { \n"
+    program = '// P\n'
+    program += "class " + randIdentifier() + " { \n"
     for i in range(0, randint(0, 10)):
         fieldOrMethod = randint(0, 1)
         if(fieldOrMethod):
@@ -115,11 +91,11 @@ def makeExpression():
     elif e == 2:
         return "(" + makeExpression() + ")"
     elif e == 3:
-        return LITS[randint(0, 11)]
+        return randLiteral()
     elif e == 4:
-        return UNOPS[randint(0, 1)] + makeExpression()
+        return randUnop() + makeExpression()
     elif e == 5:
-        return makeExpression() + BINOPS[randint(0, 10)] + makeExpression()
+        return makeExpression() + randBinop() + makeExpression()
 
 
 def makeMethod():
@@ -149,3 +125,85 @@ def makeMethod():
     method += makeStatement()
     method += "\n}"
     return method
+
+
+def randLiteral():
+    r = randint(0, len(literals) - 1)
+    return literals[r]
+
+
+def randIdentifier():
+    length = randint(1, 10)
+
+    identifier = randutil.randLetter()
+
+    for _ in range(1, length):
+        case = randint(0, 3)
+        if case == 0:
+            identifier += randutil.randUppercase()
+        elif case == 1:
+            identifier += randutil.randLowercase()
+        elif case == 2:
+            identifier += randutil.randDigit()
+        elif case == 3:
+            identifier += '_' # underscore
+
+    return identifier
+
+
+def randOperator():
+    r = randint(0, len(operators) - 1)
+    return operators[r]
+
+
+def randBinop():
+    r = randint(0, len(binop) - 1)
+    return binop[r]
+
+
+def randUnop():
+    r = randint(0, len(unop) - 1)
+    return unop[r]
+
+
+def randVisibility():
+    r = randint(0, 2)
+    return ['public ', 'private ', ''][r]
+
+
+def randAccess():
+    r = randint(0, 1)
+    return 'static ' if r == 0 else ''
+
+
+def randType():
+    # 5 choices
+    # int | boolean | id | int[] | id[] 
+    r = randint(0, 4)
+    if r == 0:
+        return 'int'
+    if r == 1:
+        return 'boolean'
+    if r == 2:
+        return randIdentifier()
+    if r == 3:
+        return 'int[]'
+    if r == 4:
+        return f'{randIdentifier}[]'
+
+
+def randParameterList():
+    numOfParameters = randint(0, 8)
+    if numOfParameters == 0:
+        return ''
+
+    parameters = f'{randType()} {randIdentifier()}'
+    for _ in range(1, numOfParameters):
+        parameters += ', '
+        parameters += f'{randType()} {randIdentifier()}'
+    
+    return parameters
+
+
+def randArgumentList():
+    pass
