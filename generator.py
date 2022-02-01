@@ -103,11 +103,13 @@ def makeExpression():
 
 
 def randLiteral():
+    '''Returns a num or a boolean value'''
     r = randint(0, len(literals) - 1)
     return literals[r]
 
 
 def randIdentifier():
+    '''Returns an identifier'''
     length = randint(1, 10)
 
     identifier = randutil.randLetter()
@@ -127,31 +129,37 @@ def randIdentifier():
 
 
 def randOperator():
+    '''Returns an operator'''
     r = randint(0, len(operators) - 1)
     return operators[r]
 
 
 def randBinop():
+    '''Returns an binary operator'''
     r = randint(0, len(binop) - 1)
     return binop[r]
 
 
 def randUnop():
+    '''Returns an unary operator'''
     r = randint(0, len(unop) - 1)
     return unop[r]
 
 
 def randVisibility():
+    '''Returns an optional visibility keywords with trailing space'''
     r = randint(0, 2)
     return ['public ', 'private ', ''][r]
 
 
 def randAccess():
+    '''Returns an optional 'static' keyword with trailing space'''
     r = randint(0, 1)
     return 'static ' if r == 0 else ''
 
 
 def randTypeOrVoid():
+    '''Returns a Type or void keyword'''
     # 5 choices of Type + void
     r = randint(0, 5)
     if r == 0:
@@ -161,6 +169,7 @@ def randTypeOrVoid():
 
 
 def randType():
+    '''Returns a Type'''
     # 5 choices
     # int | boolean | id | int[] | id[] 
     r = randint(0, 4)
