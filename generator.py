@@ -142,6 +142,7 @@ def randReference():
 
 
 def makeStatement(indentation: int = 0):
+    '''Returns a statement'''
     e = randint(0, 7)
 
     statement = '  ' * indentation
@@ -187,20 +188,34 @@ def makeStatement(indentation: int = 0):
 
 
 def randExpression():
-    e = randint(0, 5)
+    '''Returns an expression'''
+    e = randint(0, 7)
 
     if e == 0:
         return randReference()
-    elif e == 1:
-        return randReference() + "[" + randExpression()+"]"
-    elif e == 2:
-        return "(" + randExpression() + ")"
-    elif e == 3:
-        return randLiteral()
-    elif e == 4:
+    if e == 1:
+        return randReference() + "[" + randExpression() + "]"
+    if e == 2:
+        return f'{randReference()}({randArgumentList()})'
+    if e == 3:
         return randUnop() + randExpression()
-    elif e == 5:
+    if e == 4:
         return randExpression() + randBinop() + randExpression()
+    if e == 5:
+        return f'({randExpression()})'
+    if e == 6:
+        return randLiteral()        
+    if e == 7:
+        expression = 'new '
+
+        r = randint(0, 2)
+        if r == 0:
+            expression += f'{randIdentifier()}()'
+        elif r == 1:
+            expression += f'int[{randExpression()}]'
+        else:
+            expression += f'{randIdentifier()}[{randExpression()}]'
+        return expression
 
 
 def randLiteral():
