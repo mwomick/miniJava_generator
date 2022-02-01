@@ -11,11 +11,11 @@ operators = ['>', '<', '==', '>=', '<=', '!=', '&&', '||', '+', '-', '*', '/', '
 def makeProgram():
     # // P comment is for my personal testing purposes
     program = '// P\n'
-    program += randClassDeclaration()
+    program += makeClassDeclaration()
     return program
 
 
-def randClassDeclaration():
+def makeClassDeclaration():
     text = f'class {randIdentifier()} {{\n'
 
     declarationNum = randint(0, 20)
@@ -204,7 +204,7 @@ def randExpression():
     if e == 5:
         return f'({randExpression()})'
     if e == 6:
-        return randLiteral()        
+        return randLiteral()
     if e == 7:
         expression = 'new '
 
