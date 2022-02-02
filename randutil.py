@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 import string
 
 
@@ -20,4 +20,8 @@ def randLowercase():
 def randLetter():
     r = randint(0, len(string.ascii_letters) - 1)
     return string.ascii_letters[r]
+
+
+def randCase(start, end, exclude=[]):
+    return choice([i for i in range(start, end) if i not in exclude])
 
