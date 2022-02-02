@@ -62,7 +62,7 @@ def makeMethodDeclaration(indentation: int = 0):
     for _ in range(statementNum):
         method += makeStatement(indentation+1)
     
-    method += '}\n'
+    method += '  ' * indentation + '}\n'
     return method
 
 
